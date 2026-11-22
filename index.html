@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Trusted Local Service</title>
+  <style>
+    :root {
+      --bg: #0b0f17; --surface: #131a26; --surface-2: #1b2434;
+      --text: #f3f6fb; --muted: #9aa7bd; --accent: #f59e0b;
+      --accent-dark: #d97706; --green: #22c55e; --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.55; padding-bottom: 76px;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11, 15, 23, 0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; gap: 12px; }
+    .brand { font-weight: 800; font-size: 1.12rem; letter-spacing: -0.02em; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--accent); color: #111827; font-weight: 800;
+      padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.96rem;
+    }
+    .btn:hover { background: var(--accent-dark); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .hero { padding: 52px 0 42px; border-bottom: 1px solid var(--border); }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245, 158, 11, 0.12); color: var(--accent);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 18px;
+    }
+    h1 { font-size: clamp(1.95rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 16px; max-width: 780px; }
+    .sub { color: var(--muted); font-size: 1.1rem; max-width: 620px; margin-bottom: 26px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
+    .trust-strip { display: flex; flex-wrap: wrap; gap: 18px; color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+    .trust-strip span::before { content: "✓ "; color: var(--green); font-weight: 900; }
+    section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    h2 { font-size: 1.7rem; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .sec-sub { color: var(--muted); margin-bottom: 26px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .card h3 { font-size: 1.08rem; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 0.95rem; }
+    .stars { color: var(--accent); font-size: 1rem; margin-bottom: 10px; letter-spacing: 2px; }
+    .reviewer { margin-top: 14px; font-weight: 700; font-size: 0.9rem; }
+    .quote-box {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 28px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 28px;
+    }
+    form { display: grid; gap: 12px; }
+    input, textarea, select {
+      width: 100%; padding: 13px 14px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.98rem; font-family: inherit;
+    }
+    .toast {
+      display: none; margin-top: 12px; padding: 14px; border-radius: 10px;
+      background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.35); color: #bbf7d0; font-size: 0.92rem;
+    }
+    footer { padding: 30px 0; text-align: center; color: var(--muted); font-size: 0.88rem; }
+    .mobile-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+      background: var(--surface); border-top: 1px solid var(--border); padding: 10px 16px; display: flex; gap: 10px;
+    }
+    .mobile-bar a { flex: 1; text-align: center; }
+    @media (min-width: 768px) { .mobile-bar { display: none; } body { padding-bottom: 0; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand" id="nav-brand"></div>
+      <a class="btn" id="nav-call" href="#">Call Now</a>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="pill" id="hero-rating"></div>
+        <h1 id="hero-headline"></h1>
+        <p class="sub" id="hero-sub"></p>
+        <div class="cta-row">
+          <a class="btn" id="hero-call" href="#">Call For Estimate</a>
+          <a class="btn btn-outline" href="#quote">Request Quote Online</a>
+        </div>
+        <div class="trust-strip">
+          <span>Fast Response</span><span>Upfront Honest Pricing</span><span id="trust-city"></span>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="container">
+        <h2>Our Core Services</h2>
+        <p class="sec-sub" id="services-sub"></p>
+        <div class="grid" id="services-grid"></div>
+      </div>
+    </section>
+    <section>
+      <div class="container">
+        <h2>Trusted Locally (<span id="rev-score"></span> ★)</h2>
+        <p class="sec-sub">Real feedback from customers in your area.</p>
+        <div class="grid" id="reviews-grid"></div>
+      </div>
+    </section>
+    <section id="quote">
+      <div class="container">
+        <div class="quote-box">
+          <div>
+            <h2>Get a Free Estimate</h2>
+            <p class="sec-sub" style="margin-top:10px;">
+              Call directly at <strong id="contact-phone-text" style="color:var(--accent);"></strong> or send your project details below for a fast reply.
+            </p>
+            <div class="trust-strip" style="flex-direction:column; gap:10px;">
+              <span>Zero hidden fees</span><span>Reliable local crew</span><span>Same-week scheduling</span>
+            </div>
+          </div>
+          <div>
+            <form id="quote-form">
+              <input type="text" id="q-name" placeholder="Your Name" required />
+              <input type="tel" id="q-phone" placeholder="Your Phone Number" required />
+              <select id="q-service"></select>
+              <textarea id="q-notes" rows="3" placeholder="Tell us what you need done & your neighborhood..."></textarea>
+              <button type="submit" class="btn">Send Instant Text Quote Request →</button>
+            </form>
+            <div class="toast" id="form-toast"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="container"><p id="footer-copy"></p></div></footer>
+  <div class="mobile-bar">
+    <a class="btn" id="mobile-call" href="#">📞 Call Now</a>
+    <a class="btn btn-outline" href="#quote">💬 Free Quote</a>
+  </div>
+
+  <script>
+    const PRESETS = {
+      tree: {
+        label: "Tree Removal & Care",
+        services: [
+          { title: "Safe Tree Removal", desc: "Hazardous, dead, or tight-space trees removed cleanly without risking your home or fence." },
+          { title: "Trimming & Pruning", desc: "Keep limbs off your roof, boost curb appeal, and keep mature trees healthy year-round." },
+          { title: "Stump Grinding", desc: "Below-grade grinding and full cleanup so your lawn is ready to mow or sod." },
+          { title: "Storm Cleanup", desc: "Fast response when heavy wind or storms drop limbs on your yard or driveway." }
+        ],
+        reviews: [
+          { author: "Local Homeowner", text: "Showed up on time, gave a fair quote on the spot, and left our yard cleaner than they found it." },
+          { author: "Verified Customer", text: "Took down a huge tree right next to our roof safely and at a super reasonable price." },
+          { author: "Repeat Client", text: "Hardworking crew, great communication, and zero mess left behind." }
+        ]
+      },
+      detail: {
+        label: "Auto Detailing",
+        services: [
+          { title: "Full Interior Reset", desc: "Deep vacuuming, stain extraction, steam sanitizing, and leather/trim conditioning." },
+          { title: "Exterior Wash & Gloss", desc: "Safe hand wash, bug & tar removal, wheel deep clean, and durable paint protection." },
+          { title: "Complete Inside & Out", desc: "Bumper-to-bumper transformation to restore that clean showroom look and feel." },
+          { title: "Maintenance Details", desc: "Hassle-free recurring cleanings to keep your truck, SUV, or daily driver spotless." }
+        ],
+        reviews: [
+          { author: "Local Driver", text: "Looked brand new inside and out. Super easy to schedule and worth every penny." },
+          { author: "SUV Owner", text: "Got stubborn stains out I thought were permanent. Careful, thorough, and honest pricing." },
+          { author: "Repeat Customer", text: "Best detailing experience in town—on time, polite, and zero shortcuts." }
+        ]
+      },
+      general: {
+        label: "Home & Property Services",
+        services: [
+          { title: "Fast On-Site Estimates", desc: "Clear, upfront quotes with zero pushy upsells or surprise fees." },
+          { title: "Quality Craftsmanship", desc: "Done right the first time with dependable local crew members." },
+          { title: "Clean Jobsite Guarantee", desc: "We protect your property and haul away all mess when the job is wrapped." },
+          { title: "Reliable Scheduling", desc: "Show-up-on-time service across the local metro area." }
+        ],
+        reviews: [
+          { author: "Homeowner", text: "Fair price, fast turnaround, and did exactly what they promised." },
+          { author: "Local Customer", text: "Easy to reach by phone and knocked the whole job out cleanly." },
+          { author: "Verified Review", text: "Highly recommend if you want honest work without the runaround." }
+        ]
+      }
+    };
+
+    const q = new URLSearchParams(window.location.search);
+    const preset = PRESETS[q.get("t")] || PRESETS.general;
+    const digits = (q.get("p") || "5025550199").replace(/\D/g, "").slice(-10);
+    const phoneDisplay = digits.length === 10
+      ? `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`
+      : "(502) 555-0199";
+    const phoneRaw = `+1${digits}`;
+    const name = q.get("n") || "Local Pro Services";
+    const trade = q.get("tr") || preset.label;
+    const city = q.get("c") || "Louisville, KY";
+    const rating = q.get("rt") || "5.0";
+    const revCount = q.get("rc") || "25+";
+    const telHref = `tel:${phoneRaw}`;
+
+    document.getElementById("page-title").textContent = `${name} | ${trade} in ${city}`;
+    document.getElementById("nav-brand").textContent = name;
+    document.getElementById("nav-call").href = telHref;
+    document.getElementById("nav-call").textContent = `Call ${phoneDisplay}`;
+    document.getElementById("hero-rating").textContent = `★ ${rating} Rated (${revCount} Reviews) · ${city}`;
+    document.getElementById("hero-headline").textContent = `Reliable ${trade} in ${city} — Done Right the First Time.`;
+    document.getElementById("hero-sub").textContent = `${name} delivers fast estimates, honest pricing, and dependable results across ${city}.`;
+    document.getElementById("hero-call").href = telHref;
+    document.getElementById("hero-call").textContent = `📞 Call ${phoneDisplay}`;
+    document.getElementById("trust-city").textContent = `Serving ${city}`;
+    document.getElementById("services-sub").textContent = `Professional ${trade.toLowerCase()} tailored for ${city} properties.`;
+    document.getElementById("rev-score").textContent = rating;
+    document.getElementById("contact-phone-text").textContent = phoneDisplay;
+    document.getElementById("mobile-call").href = telHref;
+    document.getElementById("footer-copy").textContent = `© ${new Date().getFullYear()} ${name} · ${city} · ${phoneDisplay}`;
+
+    const sGrid = document.getElementById("services-grid");
+    const qSelect = document.getElementById("q-service");
+    preset.services.forEach(s => {
+      const card = document.createElement("div"); card.className = "card";
+      const h3 = document.createElement("h3"); h3.textContent = s.title;
+      const p = document.createElement("p"); p.textContent = s.desc;
+      card.append(h3, p); sGrid.appendChild(card);
+      const opt = document.createElement("option"); opt.value = s.title; opt.textContent = s.title;
+      qSelect.appendChild(opt);
+    });
+
+    const rGrid = document.getElementById("reviews-grid");
+    preset.reviews.forEach(r => {
+      const card = document.createElement("div"); card.className = "card";
+      const stars = document.createElement("div"); stars.className = "stars"; stars.textContent = "★★★★★";
+      const p = document.createElement("p"); p.textContent = `"${r.text}"`;
+      const who = document.createElement("div"); who.className = "reviewer"; who.textContent = `— ${r.author}`;
+      card.append(stars, p, who); rGrid.appendChild(card);
+    });
+
+    document.getElementById("quote-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const cn = document.getElementById("q-name").value.trim();
+      const cp = document.getElementById("q-phone").value.trim();
+      const cs = document.getElementById("q-service").value;
+      const nt = document.getElementById("q-notes").value.trim();
+      const msg = `Hi ${name}, my name is ${cn} (${cp}). I'd like a free estimate for ${cs}. Details: ${nt || "Please call me back."}`;
+      document.getElementById("form-toast").style.display = "block";
+      document.getElementById("form-toast").textContent = `Opening your text app to send directly to ${phoneDisplay}...`;
+      window.location.href = `sms:${phoneRaw}?body=${encodeURIComponent(msg)}`;
+    });
+  </script>
+</body>
+</html>
